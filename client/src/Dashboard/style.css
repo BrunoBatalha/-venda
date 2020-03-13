@@ -1,0 +1,111 @@
+#root .dash-container {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: #3F5198;
+}
+
+.dash-container .menu-side {
+    background-color: #172556;
+    color: #fff;
+    width: 300px;
+    min-height: 100%;
+}
+
+.dash-container .menu-side ul li {
+    list-style-type: none;
+    line-height: 50px;
+    border-bottom: 3px solid rgb(70, 81, 122, 0.60);
+    margin: 15px 10px;
+}
+
+.dash-container .menu-side ul li .btn-menu {
+    border-bottom: 3px solid rgb(70, 81, 122, 0.60);
+    font-size: 35px;
+    margin: 10px 10px;
+    padding: 10px;
+    text-align: left;
+    border-style: none;
+    border: 2px solid none;
+    border-radius: 8px 0px 0px 8px;
+    color: #fff;
+    background-color: #172556;
+    width: 280px;
+}
+
+.dash-container .menu-side ul li .btn-menu:hover {
+    cursor: pointer;
+    border-radius: 10px 0px 0px 10px;
+    background-color: rgba(95, 111, 173, 0.411);
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.dash-container .menu-side ul li .ativo {
+    background-color: #3F5198;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.dash-container .menu-side ul li .btn-menu:focus {
+    background-color: #3F5198;
+    outline: none;
+    padding: 10px;
+    width: 280px;
+    transition-property: background-color width;
+    transition-duration: 0.2s;
+}
+
+.dash-container .main-container {
+    margin: 10px 20px;
+    padding: 5px 20px;
+    border: 2px solid #172556;
+    width: 100%;
+    min-height: 100%
+}
+
+.main-container .row {
+    display: grid;
+    grid-template-columns: 40% 20% 40%;
+    grid-gap: 10px
+}
+
+.row input[type=submit] {
+    margin: 0;
+    height: 30px;
+    align-self: flex-end;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+.main-container  p {
+    font-size: 20px;
+    color: #E1E2EA;
+}
+
+.main-container .overflow-y {
+    max-height: 218px;
+    overflow-y: auto;
+}
+
+.main-container table {
+    width: 100%;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 2px;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 2px solid #E1E2EA
+}
+
+.visible{
+    display: block
+}
+
+.no-visible{
+    display: none
+}
