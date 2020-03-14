@@ -60,7 +60,7 @@ form .input-block input:focus {
     box-shadow: 0 0 0 2pt #172556;
 }
 
-form input[type=submit] {
+form input[type=submit], input[type=button] {
     display: block;
     margin: 10px auto;
     height: 40px;
@@ -72,13 +72,13 @@ form input[type=submit] {
     transition: background-color 0.2s;
     font-size: 17px;
 }
-form input[type=submit]:active, :focus-within {
+form input[type=submit]:active, :focus-within, input[type=button]:active, :focus-within {
     box-shadow: none;
     transition: box-shadow 0.2s;
     outline: none;
 }
 
-form input[type=submit]:hover {
+form input[type=submit]:hover, input[type=button]:hover {
     background-color: #afafb3;
     cursor: pointer;
     transition: background-color 0.2s;

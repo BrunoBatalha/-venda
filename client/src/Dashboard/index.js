@@ -4,16 +4,21 @@ import './style.css';
 
 function Dashboard() {
     const [troco, setTroco] = useState(0);
-    const [pago, setPago] = useState(0);
+    const [pago, setPago] = useState('');
     const [total, setTotal] = useState(0);
-    const [codigo, setCodigo] = useState(0);
-    const [quantidade, setQuantidade] = useState(0);
+    const [codigo, setCodigo] = useState('');
+    const [quantidade, setQuantidade] = useState('');
+    const [pesquisa, setPesquisa] = useState('');
+    const [filtro, setFiltro] = useState('');
+
     const [productsAll, setProductsAll] = useState([]);
+    const [productsSearch, setProductsSearch] = useState([]);
     const [productsSell, setProductsSell] = useState([]);
 
     useEffect(() => {
         api.post('listar').then(response => {
             setProductsAll(response.data);
+            setProductsSearch(response.data);
         }).catch(error => {
             console.log(error);
         })
@@ -78,6 +83,40 @@ function Dashboard() {
         return 0;
     }
 
+    function pesquisaProduto(e) {
+        e.preventDefault();
+        let copyProductSearch = [];
+        switch (filtro.toUpperCase()) {
+            case 'CÓDIGO': {
+                copyProductSearch = productsSearch.filter(element => Number(pesquisa) === element.codigo);
+                break;
+            }
+            default: {
+                copyProductSearch = productsAll;
+                break;
+            }
+        }
+        setProductsSearch(copyProductSearch);
+    }
+
+    function limparVenda() {
+        setProductsSell([]);
+        setCodigo('');
+        setQuantidade('');
+        setTroco(0)
+        setPago('')
+    }
+
+    function clickCancelarVenda(){
+        limparVenda()
+    }
+
+    function venderProduto(e){
+        e.preventDefault();
+        limparVenda();
+        alert('Produto vendido')
+    }
+
     return (
         <div className="dash-container">
             <aside className='menu-side'>
@@ -104,17 +143,17 @@ function Dashboard() {
                     <div className='row'>
                         <div className="input-block">
                             <label htmlFor="codigo">Código do Produto</label>
-                            <input type="number" name="codigo" required onChange={e => setCodigo(Number(e.target.value))} />
+                            <input type="number" name="codigo" value={codigo} required onChange={e => setCodigo(Number(e.target.value))} />
                         </div>
                         <div className="input-block">
                             <label htmlFor="quantidade">Qnt.</label>
-                            <input type="number" name="quantidade" required onChange={e => setQuantidade(Number(e.target.value))} />
+                            <input type="number" name="quantidade" value={quantidade} required onChange={e => setQuantidade(Number(e.target.value))} />
                         </div>
                         <input type="submit" value="Próximo" />
                     </div>
                 </form>
 
-                <form className='margin-top'>
+                <form onSubmit={venderProduto} className='margin-top'>
                     <hr></hr>
                     <div className='margin-top'>
                         <p>Produtos</p>
@@ -163,25 +202,24 @@ function Dashboard() {
                         </div>
                     </div>
                     <div className='margin-top' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: '10px' }}>
-                        <input type="submit" value="Novo" style={{ margin: '0  5px' }} />
-                        <input type="submit" value="Finalizar" style={{ margin: '0 5px' }} />
-                        <input type="submit" value="Cancelar" style={{ margin: '0 5px' }} />
+                        <input type="button" onClick={clickCancelarVenda} value="Cancelar venda" style={{ margin: '0  5px' }} />
+                        <input type="submit"value="Finalizar" style={{ margin: '0 5px' }} />
                     </div>
                 </form>
             </main>
 
             <main className="main-container no-visible" id='id-produtos'>
-                <form>
+                <form onSubmit={pesquisaProduto}>
                     <div className='row'>
                         <div className="input-block">
-                            <label htmlFor="pesquisa">Pesquisar</label>
-                            <input type="text" name="pesquisa" />
+                            <label htmlFor="pesquisa">Código</label>
+                            <input type="text" name="pesquisa" value={pesquisa} onChange={e => setPesquisa(e.target.value)} />
                         </div>
                         <div className="input-block">
-                            <label htmlFor="filtro">Filtrar por</label>
-                            <select name="filtro">
-                                <option value="Código">Código</option>
-                                <option value="Descricao">Descricao</option>
+                            <label htmlFor="filtro">Buscar</label>
+                            <select name="filtro" onChange={e => setFiltro(e.target.value)}>
+                                <option value="Todos">Todos</option>
+                                <option value="Código">Por Código</option>
                             </select>
                         </div>
                         <input type="submit" value="Procurar" />
@@ -200,7 +238,7 @@ function Dashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productsAll.map((element, i) => (
+                                {productsSearch.map((element, i) => (
                                     <tr key={i}>
                                         <td>{element.codigo}</td>
                                         <td>{element.descricao}</td>
