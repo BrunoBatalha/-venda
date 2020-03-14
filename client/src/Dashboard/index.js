@@ -3,6 +3,7 @@ import api from '../api';
 import './style.css';
 
 function Dashboard() {
+    
     const [troco, setTroco] = useState(0);
     const [pago, setPago] = useState('');
     const [total, setTotal] = useState(0);
