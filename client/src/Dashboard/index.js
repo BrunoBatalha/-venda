@@ -3,6 +3,9 @@ import api from '../api';
 import './style.css';
 
 function Dashboard() {
+    const [troco, setTroco] = useState(0);
+    const [pago, setPago] = useState(0);
+    const [total, setTotal] = useState(0);
     const [codigo, setCodigo] = useState(0);
     const [quantidade, setQuantidade] = useState(0);
     const [productsAll, setProductsAll] = useState([]);
@@ -16,7 +19,64 @@ function Dashboard() {
         })
     }, []);
 
-    
+    useEffect(() => {
+        const t = totalPrice(productsSell);
+        console.log(t)
+        setTotal(t);
+    }, [productsSell]);
+
+    useEffect(() => {
+        setTroco(pago - total)
+    }, [pago, total]);
+
+    function addProductInTable(e) {
+        e.preventDefault();
+        const product = productsAll.filter(element => (element.codigo === codigo))[0];
+        if (product) {
+            const copyProductsSell = JSON.parse(JSON.stringify(productsSell));
+            product.quantidade = quantidade;
+            if (containProduct(product, copyProductsSell)) {
+                const newProductsSell = sumAmountAndPriceProduct(product, copyProductsSell);
+                setProductsSell(newProductsSell);
+            } else {
+                product.preco_total = product.preco_unitario * product.quantidade;
+                copyProductsSell.push(product);
+                setProductsSell(copyProductsSell);
+            }
+
+        } else alert('Produto não encontrado');
+    }
+
+    function containProduct(product, arr) {
+        let productInTable = false;
+        arr.forEach(element => {
+            if (element.codigo === product.codigo) {
+                productInTable = true;
+            }
+        });
+        return productInTable;
+    }
+
+    function sumAmountAndPriceProduct(product, arr) {
+        return arr.map(element => {
+            if (product.codigo === element.codigo) {
+                element.quantidade += product.quantidade;
+                element.preco_total = element.quantidade * element.preco_unitario;
+            }
+            return element;
+        });
+    }
+
+    function totalPrice(arr) {
+        const copyProductsSell = JSON.parse(JSON.stringify(arr))
+        if (arr.length) {
+            const arrTotalPrices = copyProductsSell.map(element => element.preco_total)
+            return arrTotalPrices.reduce((accumulator, precoTotal) => (
+                accumulator += precoTotal
+            ));
+        }
+        return 0;
+    }
 
     return (
         <div className="dash-container">
@@ -55,14 +115,11 @@ function Dashboard() {
                 </form>
 
                 <form className='margin-top'>
-                    <div className="input-block">
-                        <label htmlFor="descricao">Descrição</label>
-                        <input type="text" name="descricao" readOnly />
-                    </div>
+                    <hr></hr>
                     <div className='margin-top'>
                         <p>Produtos</p>
                         <div className='overflow-y'>
-                            <table>
+                            <table >
                                 <thead>
                                     <tr>
                                         <th>Código</th>
@@ -72,7 +129,7 @@ function Dashboard() {
                                         <th>Preço total (R$)</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
                                     {productsSell.map((element, i) => (
                                         <tr key={i}>
                                             <td>{element.codigo}</td>
@@ -94,15 +151,15 @@ function Dashboard() {
                         }}>
                         <div className="input-block">
                             <label htmlFor="total">Total à pagar</label>
-                            <input type="text" name="total" readOnly />
+                            <input type="text" name="total" readOnly value={'R$ ' + total.toFixed(2)} />
                         </div>
                         <div className="input-block">
                             <label htmlFor="valor_pago">Valor pago</label>
-                            <input type="text" name="valor_pago" required />
+                            <input type="text" name="valor_pago" required value={pago} onChange={e => setPago(e.target.value)} />
                         </div>
                         <div className="input-block">
                             <label htmlFor="valor_troco">Valor do troco</label>
-                            <input type="text" name="valor_troco" readOnly />
+                            <input type="text" name="valor_troco" readOnly value={'R$ ' + troco.toFixed(2)} />
                         </div>
                     </div>
                     <div className='margin-top' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: '10px' }}>
@@ -130,6 +187,7 @@ function Dashboard() {
                         <input type="submit" value="Procurar" />
                     </div>
                 </form>
+                <hr className='margin-top'></hr>
                 <div className='margin-top'>
                     <p>Produtos</p>
                     <div className='overflow-y' style={{ maxHeight: '400px' }}>
