@@ -1,143 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../api';
 import './style.css';
-const produtos = [
-    {
-        codigo: 2019,
-        descricao: 'Água mineral',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 1209,
-        descricao: 'Carro hotwheels',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 2200,
-        descricao: 'Militos - sabor carne',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 5497,
-        descricao: 'Batata - ruffles',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Monitor',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Mouse',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 1209,
-        descricao: 'Carro hotwheels',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 2200,
-        descricao: 'Militos - sabor carne',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 5497,
-        descricao: 'Batata - ruffles',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Teclado',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Monitor',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-    {
-        codigo: 4731,
-        descricao: 'Mouse',
-        quantidade: 10,
-        preco_unitario: 10.00,
-        preco_total: 100.00
-    },
-
-]
 
 function Dashboard() {
+    const [codigo, setCodigo] = useState(0);
+    const [quantidade, setQuantidade] = useState(0);
+    const [productsAll, setProductsAll] = useState([]);
+    const [productsSell, setProductsSell] = useState([]);
+
+    useEffect(() => {
+        api.post('listar').then(response => {
+            setProductsAll(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }, []);
+
+    
+
     return (
         <div className="dash-container">
             <aside className='menu-side'>
@@ -160,15 +40,15 @@ function Dashboard() {
                 </ul>
             </aside>
             <main className='main-container visible' id='id-venda'>
-                <form>
+                <form onSubmit={addProductInTable}>
                     <div className='row'>
                         <div className="input-block">
                             <label htmlFor="codigo">Código do Produto</label>
-                            <input type="number" name="codigo" required/>
+                            <input type="number" name="codigo" required onChange={e => setCodigo(Number(e.target.value))} />
                         </div>
                         <div className="input-block">
                             <label htmlFor="quantidade">Qnt.</label>
-                            <input type="number" name="quantidade" required/>
+                            <input type="number" name="quantidade" required onChange={e => setQuantidade(Number(e.target.value))} />
                         </div>
                         <input type="submit" value="Próximo" />
                     </div>
@@ -193,7 +73,7 @@ function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {produtos.map((element, i) => (
+                                    {productsSell.map((element, i) => (
                                         <tr key={i}>
                                             <td>{element.codigo}</td>
                                             <td>{element.descricao}</td>
@@ -218,7 +98,7 @@ function Dashboard() {
                         </div>
                         <div className="input-block">
                             <label htmlFor="valor_pago">Valor pago</label>
-                            <input type="text" name="valor_pago" required/>
+                            <input type="text" name="valor_pago" required />
                         </div>
                         <div className="input-block">
                             <label htmlFor="valor_troco">Valor do troco</label>
@@ -258,19 +138,15 @@ function Dashboard() {
                                 <tr>
                                     <th>Código</th>
                                     <th>Descrição</th>
-                                    <th>Quantidade</th>
                                     <th>Preço unitário (R$) </th>
-                                    <th>Preço total (R$)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {produtos.map((element, i) => (
+                                {productsAll.map((element, i) => (
                                     <tr key={i}>
                                         <td>{element.codigo}</td>
                                         <td>{element.descricao}</td>
-                                        <td>{element.quantidade}</td>
                                         <td>R$ {element.preco_unitario}</td>
-                                        <td>R$ {element.preco_total}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -304,13 +180,11 @@ window.onload = function () {
 function changeMain(strNewScreen) {
     switch (strNewScreen.toUpperCase()) {
         case 'VENDA': {
-            console.log('escolheu venda')
             document.getElementById('id-venda').className = 'main-container visible'
             document.getElementById('id-produtos').className = 'main-container no-visible'
             break;
         }
         case 'PRODUTOS': {
-            console.log('escolheu produtos')
             document.getElementById('id-venda').className = 'main-container no-visible'
             document.getElementById('id-produtos').className = 'main-container visible'
             break;
@@ -327,9 +201,9 @@ function changeMain(strNewScreen) {
 function changeButton(buttons, newButton) {
 
     buttons.forEach(element => {
-        element.className = 'btn-menu' 
+        element.className = 'btn-menu'
         if (element.textContent === newButton.textContent) {
-            element.className = 'btn-menu ativo' 
+            element.className = 'btn-menu ativo'
         }
     });
 }
