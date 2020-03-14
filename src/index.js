@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const express = require('express');
 const ProdutoDao = require('./controllers/ProdutoDao');
+const UsuarioDao = require('./controllers/UsuarioDao');
 const app = express();
 
 mongoose.connect(process.env.MONGOL_URL,{
@@ -34,6 +35,21 @@ app.post('/listar', async(req,res)=>{
     } catch (error) {res.json(error)}
     
 });
+
+app.post('/register',async(req,res)=>{
+    try {
+        const response = await UsuarioDao.adicionar(req.body);
+        res.json(response);
+    } catch (error) {res.json(error)}
+});
+
+
+app.post('/listarUsuarios',async(req,res)=>{
+    try {
+        const response = await UsuarioDao.listar();
+        res.json(response);
+    } catch (error) {res.json(error);}
+})
 
 app.listen(process.env.PORT,()=>{
     console.log('Servidor rodando');
