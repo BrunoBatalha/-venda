@@ -9,8 +9,8 @@ import Dashboard from './Dashboard';
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
-            <Route path='/' exact component={App} />
-            <Route path='/register' exact component={Register} />
+            <Route path='/' exact component={Dashboard} />
+            <Route path='/register' exact component={Dashboard} />
             <Route path='/dashboard' exact component={Dashboard} />
         </Switch>
     </BrowserRouter>,

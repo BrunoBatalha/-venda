@@ -36,6 +36,11 @@ app.post('/listar', async(req,res)=>{
     
 });
 
+app.post('/login',async(req,res)=>{
+    
+});
+
+
 app.post('/register',async(req,res)=>{
     try {
         const response = await UsuarioDao.adicionar(req.body);

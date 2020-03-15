@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import api from '../api';
 function Login({ history }) {
 
-  const [formData, setFormData] = useState({ usuario, senha });
+  const [formData, setFormData] = useState({ usuario:'', senha:'' });
 
   function handleLogin(e) {
     e.preventDefault();
